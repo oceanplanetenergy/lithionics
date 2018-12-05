@@ -68,8 +68,9 @@ This message provides battery Voltage and Current data. Message is sent every 1 
 | 5    | Remaining Relative Capacity  | uint8     |         | %    | Same as State of Charge data. Precision = 0.5%                                              |
 
 ### Example
-
-| 01 | 78  | C8    | 5702  | C6    | 6F17 |
-| 1  | 120 | 200   | 599 | 198   | |
-|    |     | * 0.5 |       | * 0.5 | |
-|    |     | 100   | 599 | 99    | |
+| Instance | Priority | Health % | Ah   | SOC   |
+|----------|----------|----------|------|-------|
+| 01       | 78       | C8       | 5702 | C6    |
+| 1        | 120      | 200      | 599  | 198   |
+|          |          | * 0.5    |      | * 0.5 |
+|          |          | 100      | 599  | 99    |
