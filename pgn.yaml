@@ -1,0 +1,121 @@
+---
+-
+  pgn: 131067
+  id: rvcDcSourceStatus3
+  name: RVC DC Source Status 3
+  description: "RV-C: Remaining battery capacity"
+  fields:
+   -
+    Id: instance
+    Name: "Battery Instance"
+    Description: "Default = 1, battery instance or BAT_ID, can be changed in BMS config to allow multiple BMS systems on the same bus."
+    BitLength: 8
+    BitOffset: 0
+    BitStart: 0
+    Type: Integer
+    Signed: false
+   -
+     Order: 2
+    Id: priority
+    Name: "Device Priority"
+    Description: "Default = 120, identifies device type as BMS, see RV-C specs for details"
+    BitLength: 8
+    BitOffset: 8
+    BitStart: 0
+    Resolution: 1
+    Signed: false
+   -
+     Order: 3
+    Id: stateOfHealth
+    Name: Health
+    Description: "Precision = 0.5%. always set to 100%."
+    BitLength: 8
+    BitOffset: 16
+    BitStart: 0
+    Resolution: 0.5
+    Signed: false
+   -
+     Order: 4
+    Id: capacityRemaining
+    Name: "Remaining Discharge Capacity"
+    Description: "Amp Hours"
+    BitLength: 16
+    BitOffset: 24
+    BitStart: 0
+    Signed: false
+   -
+     Order: 5
+    Id: stateOfCharge
+    Name: "Remaining Relative Capacity"
+    Description: "Percentage of charge."
+    BitLength: 8
+    BitOffset: 40
+    BitStart: 0
+    Resolution: 0.5
+    Signed: false
+-
+  pgn: 131068
+  id: rvcDcSourceStatus2
+  description: "RV-C: Battery temperature and SOC data"
+  complete: true
+  repeatingFields: 0
+  fields:
+   -
+    id: instance
+    name: "Battery Instance"
+    description: "Default = 1, battery instance or BAT_ID, can be changed in BMS config to allow multiple BMS systems on the same bus."
+    bitLength: 8
+   -
+    id: priority
+    name: "Device Priority"
+    description: "Default = 120, identifies device type as BMS, see RV-C specs for details"
+    bitLength: 8
+   -
+    id: batteryTemperature
+    name: "Battery Temperature"
+    description: "Precision = 0.003125 °C Offset – 0 °C = 0x2220 (8736) Example – 0x2540 (9536) = 25 °C"
+    bitLength: 16
+    offset: -8736
+    resolution: 0.003125
+    units: C
+   -
+    id: stateOfCharge
+    name: "State of Charge"
+    description: "Precision = 0.5% Example – 0xC8 = 100%"
+    bitLength: 8
+    resolution: 0.5
+   -
+    id: timeRemaining
+    name: "Remaining Discharge Time"
+    description: "Precision = 1 minute Example – 0x05A0 = 1440 min = 1 day"
+    bitLength: 16
+-
+  pgn: 131069
+  id: rvcDcSourceStatus1
+  name: RVC DC Source Status 1
+  description: "RV-C: Battery Voltage and Current data"
+  complete: true
+  fields:
+   -
+    id: instance
+    name: "Battery Instance"
+    description: "Default = 1, battery instance or BAT_ID, can be changed in BMS config to allow multiple BMS systems on the same bus."
+    bitLength: 8
+   -
+    id: priority
+    name: "Device Priority"
+    description: "Default = 120, identifies device type as BMS, see RV-C specs for details"
+    bitLength: 8
+   -
+    id: batteryVoltage
+    name: "Battery Voltage"
+    description: "Battery Voltage. Precision = 0.05v"
+    bitLength: 16
+    resolution: 0.05
+   -
+    id: batteryCurrent
+    name: "Battery Current"
+    description: "Precision = 0.5% Example – 0xC8 = 100%"
+    bitLength: 32
+    offset: -2000000000
+    resolution: 0.001

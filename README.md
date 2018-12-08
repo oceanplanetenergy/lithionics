@@ -4,10 +4,10 @@
 
 | Message                 | PGN     | PGN    | Notes                                                          |
 |-------------------------|---------|--------|----------------------------------------------------------------|
-| REQUEST                 | 0xEA##  |        | BMS listens and responds to these messages                     |
-| ADDRESS_CLAIM           | 0xEE##  |        | BMS will claim preset SA=0x45, but can be changed in config    |
+| REQUEST                 | 0xEA##  | 59904  | isoRequest. BMS listens and responds to these messages         |
+| ADDRESS_CLAIM           | 0xEE##  | 60928  | BMS will claim preset SA=0x45, but can be changed in config.   |
 | DM_RV                   | 0x1FECA |        | Diagnostic data as defined in RV-C specs                       |
-| PRODUCT_ID              | 0xFEEB  |        | Single frame ID string = LI3*8**                               |
+| PRODUCT_ID              | 0xFEEB  | 65259  | Single frame ID string = LI3*8**                               |
 | DC_SOURCE_STATUS_1      | 0x1FFFD | 131069 | Battery Voltage and Current data                               |
 | DC_SOURCE_STATUS_2      | 0x1FFFC | 131068 | Battery Temperature and SOC data                               |
 | DC_SOURCE_STATUS_3      | 0x1FFFB | 131067 | provides remaining Ah capacity                                 |
