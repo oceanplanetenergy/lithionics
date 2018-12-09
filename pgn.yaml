@@ -6,53 +6,32 @@
   description: "RV-C: Remaining battery capacity"
   fields:
    -
-    Id: instance
-    Name: "Battery Instance"
-    Description: "Default = 1, battery instance or BAT_ID, can be changed in BMS config to allow multiple BMS systems on the same bus."
-    BitLength: 8
-    BitOffset: 0
-    BitStart: 0
-    Type: Integer
-    Signed: false
+    id: instance
+    name: "Battery Instance"
+    description: "Default = 1, battery instance or BAT_ID, can be changed in BMS config to allow multiple BMS systems on the same bus."
+    bitLength: 8
    -
-     Order: 2
-    Id: priority
-    Name: "Device Priority"
-    Description: "Default = 120, identifies device type as BMS, see RV-C specs for details"
-    BitLength: 8
-    BitOffset: 8
-    BitStart: 0
-    Resolution: 1
-    Signed: false
+    id: priority
+    name: "Device Priority"
+    description: "Default = 120, identifies device type as BMS, see RV-C specs for details"
+    bitLength: 8
    -
-     Order: 3
-    Id: stateOfHealth
-    Name: Health
-    Description: "Precision = 0.5%. always set to 100%."
-    BitLength: 8
-    BitOffset: 16
-    BitStart: 0
-    Resolution: 0.5
-    Signed: false
+    id: stateOfHealth
+    name: Health
+    description: "Precision = 0.5%. always set to 100%."
+    bitLength: 8
+    resolution: 0.5
    -
-     Order: 4
-    Id: capacityRemaining
-    Name: "Remaining Discharge Capacity"
-    Description: "Amp Hours"
-    BitLength: 16
-    BitOffset: 24
-    BitStart: 0
-    Signed: false
+    id: capacityRemaining
+    name: "Remaining Discharge Capacity"
+    description: "Amp Hours"
+    bitLength: 16
    -
-     Order: 5
-    Id: stateOfCharge
-    Name: "Remaining Relative Capacity"
-    Description: "Percentage of charge."
-    BitLength: 8
-    BitOffset: 40
-    BitStart: 0
-    Resolution: 0.5
-    Signed: false
+    id: stateOfCharge
+    name: "Remaining Relative Capacity"
+    description: "Percentage of charge."
+    bitLength: 8
+    resolution: 0.5
 -
   pgn: 131068
   id: rvcDcSourceStatus2
@@ -96,26 +75,176 @@
   description: "RV-C: Battery Voltage and Current data"
   complete: true
   fields:
-   -
-    id: instance
-    name: "Battery Instance"
-    description: "Default = 1, battery instance or BAT_ID, can be changed in BMS config to allow multiple BMS systems on the same bus."
-    bitLength: 8
-   -
-    id: priority
-    name: "Device Priority"
-    description: "Default = 120, identifies device type as BMS, see RV-C specs for details"
-    bitLength: 8
-   -
-    id: batteryVoltage
-    name: "Battery Voltage"
-    description: "Battery Voltage. Precision = 0.05v"
-    bitLength: 16
-    resolution: 0.05
-   -
-    id: batteryCurrent
-    name: "Battery Current"
-    description: "Precision = 0.5% Example – 0xC8 = 100%"
-    bitLength: 32
-    offset: -2000000000
-    resolution: 0.001
+    -
+      id: instance
+      name: "Battery Instance"
+      description: "Battery Instance: Default = 1, battery instance or BAT_ID, can be changed in BMS config to allow multiple BMS systems on the same bus."
+      bitLength: 8
+    -
+      id: priority
+      name: "Device Priority"
+      description: "Default = 120, identifies device type as BMS, see RV-C specs for details"
+      bitLength: 8
+    -
+      id: batteryVoltage
+      name: "Battery Voltage"
+      description: "Battery Voltage. Precision = 0.05v"
+      bitLength: 16
+      resolution: 0.05
+    -
+      id: batteryCurrent
+      name: "Battery Current"
+      description: "Precision = 0.5% Example – 0xC8 = 100%"
+      bitLength: 32
+      offset: -2000000000
+      resolution: 0.001
+-
+  pgn: 130761
+  id: rvcDcSourceStatus4
+  name: RVC DC Source Status 4
+  description: Desired charger state and charge specs
+  fields:
+    -
+      id: instance
+      name: "Battery Instance"
+      description: "Default = 1, battery instance or BAT_ID, can be changed in BMS config to allow multiple BMS systems on the same bus."
+      bitLength: 8
+    -
+      id: priority
+      name: "Device Priority"
+      description: "Default = 120, identifies device type as BMS, see RV-C specs for details"
+      bitLength: 8
+    -
+      id: desiredSoc
+      name: Desired SOC
+      description: Desired Charge State
+      bitLength: 8
+      options:
+        - 0 Undefined, charging source decides (Default)
+        - 1 Do not charge. Charger to stop immediately.
+        - 2 Bulk
+        - 3 Absorption. Final stage. Charger should reduce the current.
+        - 4 Overcharge
+        - 5 Equalize
+        - 6 Float
+        - 7 Constant voltage / Current
+    -
+      id: desiredChargeVoltage
+      name: Desired Charge Voltage
+      bitLength: 16
+      resolution: 0.05
+    -
+      id: desiredChargeCurrent
+      name: Desired Charge Current
+      description: Positive value = charge
+      bitLength: 16
+      resolution: 0.05
+      offset: -32000
+    -
+      id: batteryType
+      name: Battery Type
+      bitLength: 4
+      options:
+        - 0 Flooded
+        - 1 Gel
+        - 2 AGM
+        - 3 Lithium-Iron-Phosphate
+-
+  pgn: 130759
+  id: rvcDcSourceStatus6
+  name: RVC DC Source Status 6
+  description: Provides LVC and HVC alarms and disconnect status
+  fields:
+    -
+      id: instance
+      name: "Battery Instance"
+      description: "Battery Instance: Default = 1, battery instance or BAT_ID, can be changed in BMS config to allow multiple BMS systems on the same bus."
+      bitLength: 8
+    -
+      id: priority
+      name: "Device Priority"
+      description: "Default = 120, identifies device type as BMS, see RV-C specs for details"
+      bitLength: 8
+    -
+      id: highVoltageAlarm
+      name: High Voltage Alarm
+      description: Indicates cell level or pack level overcharge. Stop charging!
+      bitLength: 2
+    -
+      id: highVoltageDisconnect
+      description: Indicates that battery has been disconnected due to cell level or pack level overcharge risk
+      bitLength: 2
+    -
+      id: lowVoltageAlarm
+      name: Low Voltage Alarm
+      description: Low Voltage Alarm Status
+      bitLength: 2
+    -
+      id: lowVoltageDisconnect
+      name: Low Voltage Disconnect
+      description: Low Voltage Disconnect Status
+      bitLength: 2
+-
+  pgn: 130725
+  id: rvcDcSourceStatus11
+  name: RVC DC Source Status 11
+  fields:
+    -
+      id: instance
+      name: "Battery Instance"
+      description: "Battery Instance: Default = 1, battery instance or BAT_ID, can be changed in BMS config to allow multiple BMS systems on the same bus."
+      bitLength: 8
+    -
+      id: priority
+      name: "Device Priority"
+      description: "Default = 120, identifies device type as BMS, see RV-C specs for details"
+      bitLength: 8
+
+-
+  pgn: 130724
+  id: rvcDcSourceCommand
+  name: RVC Source Command
+-
+  pgn: 61253
+  id: lithionicsCommand
+  name: "Lithionics: Command"
+-
+  pgn: 61184
+  id: lithionicsStatus
+  name: "Lithionics: Status"
+  fields:
+
+-
+  pgn: 65259
+  id: rvcProductId
+  name: RVC Product Id
+  description: Product identification message. [ Make, Model, Serial Num, Unit Num ]
+  fields:
+    -
+      id: productId
+      name: Product Id
+      description: Text string to identify the BMS on the RV-C network.
+      bitLength: 64
+      type: ASCII text
+-
+  pgn: 130762
+  id: rvcDmRv
+  name: RVC DM RV
+  description: Diagnostic Message. Indicate general operating status. ON/OFF status of the main contactor. Every 5 seconds.
+  fields:
+    -
+      id: status1
+      name: Status 1
+      description: Operating Status 1
+      bitLength: 2
+    -
+      id: status2
+      name: Status 2
+      description: Operating Status 2
+      bitLength: 2
+    -
+      id: source
+      name: Source
+      description: Source Address
+      default: 0x45
+      bitLength: 8
