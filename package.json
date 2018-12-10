@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "lodash": "^4.17.11"
+  },
+  "dependencies": {
+    "cape-lodash": "^2.3.0",
+    "js-yaml": "^3.12.0"
+  }
+}

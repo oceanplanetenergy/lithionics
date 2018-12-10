@@ -199,21 +199,182 @@
       name: "Device Priority"
       description: "Default = 120, identifies device type as BMS, see RV-C specs for details"
       bitLength: 8
-
+    -
+      id: batterySwitch
+      description: State of Battery main power switch / contactor
+      bitLength: 2
+    -
+      id: chargeSwitch
+      description: State of separate charge bus Battery switch / contactor
+      bitLength: 2
+    -
+      id: chargeDetected
+      description: Charge source was detected while power was off due to low state of charge
+      bitLength: 2
+    -
+      id: reserveReached
+      description: Reserve level has been reached
+      bitLength: 2
+    -
+      id: fullCapacity
+      description: Nominal capacity of a fully charged battery
+      bitLength: 16
+      units: Ah
+    -
+      id: dcPower
+      description: Current DC Power level
+      bitLength: 16
+      units: W
 -
   pgn: 130724
   id: rvcDcSourceCommand
   name: RVC Source Command
+  description: BMS listens for and responds to this message.
+  fields:
+    -
+      id: instance
+      name: "Battery Instance"
+      description: "Battery Instance: Default = 1, battery instance or BAT_ID, can be changed in BMS config to allow multiple BMS systems on the same bus."
+      bitLength: 8
+    -
+      id: desiredPowerStatus
+      bitLength: 2
+    -
+      id: desiredChargeStatus
+      bitLength: 2
 -
-  pgn: 61253
+  pgn: 61253 # could be EF45
   id: lithionicsCommand
   name: "Lithionics: Command"
+  fields:
+    -
+      id: confirmLithionics
+      bitLength: 8
+      static: 0xAA
+    -
+      id: instance
+      name: "Battery Instance"
+      description: "Battery Instance: Default = 1, battery instance or BAT_ID, can be changed in BMS config to allow multiple BMS systems on the same bus."
+      bitLength: 8
 -
   pgn: 61184
   id: lithionicsStatus
   name: "Lithionics: Status"
+  length: 7
   fields:
-
+    -
+      id: confirmLithionics
+      name: Confirm Lithionics
+      bitLength: 8
+      static: 0xAB
+    -
+      id: instance
+      name: "Battery Instance"
+      description: "Battery Instance: Default = 1, battery instance or BAT_ID, can be changed in BMS config to allow multiple BMS systems on the same bus."
+      bitLength: 8
+    -
+      id: maxTemp
+      name: Max Temp
+      bitLength: 8
+      offset: -40
+      units: C
+    -
+      id: minTemp
+      name: Min Temp
+      bitLength: 8
+      offset: -40
+      units: C
+    -
+      name: High Voltage
+      description: Indicates that battery voltage is above HVC, typically 3.70VPC.
+      bitLength: 1
+    -
+      name: Charger Detected
+      description: Indicates that charge voltage was detected on the far side of the contactor, allowing contactor to close even when battery is in Low Voltage state. This bit resets when battery reaches Nominal voltage.
+      bitLength: 1
+    -
+      name: NeverDie Reserve
+      description: Indicates that battery is in the NeverDie Reserve State, allowing access to reserve energy.
+      bitLength: 1
+    -
+      name: OptoLoop Open
+      description: Indicates that Cell Loop is open, which means one or more cells is out of normal voltage range, or broken Cell Loop wiring between battery modules and/or NeverDie BMS unit.
+      bitLength: 1
+    -
+      name: Reserve Voltage Range
+      description: Indicates that battery voltage is below RVC, typically 3.0VPC.
+      bitLength: 1
+    -
+      name: Low Voltage State
+      description: Indicates that battery voltage is below LVC, typically 2.9VPC.
+      bitLength: 1
+    -
+      name: Battery Protection State
+      description: Indicates that battery is recovering from abnormal event, such as short circuit, pre-charge failure, or contactor failure. See additional bits below for more details.
+      bitLength: 1
+    -
+      name: Power Off State
+      description: Indicates that battery was turned off by a command or a button press.
+      bitLength: 1
+    -
+      name: AUX Contacts State
+      description: State of Auxiliary contacts inside the contactor, reflects actual physical state of the main contactor. This optional feature requires special model of the contactor with AUX contacts.
+      bitLength: 1
+    -
+      name: AUX Contacts Error
+      description: In case of contactor welding, this bit will indicate discrepancy between expected and actual state of contactor. It also sets Battery Protection State bit.
+      bitLength: 1
+    -
+      name: Pre-charge Error
+      description: Indicates that Pre-charge function failed to detect voltage rise on the load side of BMS, which could mean a short circuit condition or other issues with load wiring. It also sets Bit 6 – Battery Protection State. This optional feature requires Pre-charge relay and resistor to be installed inside the BMS unit.
+      bitLength: 1
+    -
+      name: Contactor Flutter
+      description: If BMS contactor changes state 10 times over 5- minute period, BMS enters Power Off state and sets this bit, so troubleshooting can be performed. This condition could be caused by wiring problems or other hardware issues and requires service attention.
+      bitLength: 1
+    -
+      name: AC Power Present
+      description: Indicates that BMS detected AC power presence, so BMS expects charging to begin shortly. This optional feature requires AC/DC supply wired to the BMS unit to connect to AC grid.
+      bitLength: 1
+    -
+      name: TSM Charger Present
+      description: Indicates that CAN message from TSM charger was detected on CANBus interface. This indicates TSM charger is present and has AC power. Used for troubleshooting TSM chargers.
+      bitLength: 1
+    -
+      name: TSM Charger Error
+      description: Message received from TSM charger indicating an issue with the charger. Further analysis of CAN data from the charger is needed to determine exact nature of the problem.
+      bitLength: 1
+    -
+      name: Temperature Intervention Sensor Error
+      description: Indicates a problem with temperature intervention sensor installed inside the battery module. Temperature data from this sensor is used to cutoff battery power under extreme temperatures.
+      bitLength: 1
+    -
+      name: AGSR State
+      description: State of optional AGSR Control circuit, used to start/stop generators when BMS is wired into supported generator’s auto start interface.
+      bitLength: 1
+    -
+      name: Hot Temperature State
+      description: Temperature detected by Temperature Intervention Sensor exceeded allowed threshold.
+      bitLength: 1
+    -
+      name: Cold Temperature State
+      description: Temperature detected by Temperature Intervention Sensor is below allowed threshold.
+      bitLength: 1
+    -
+      name: AUXIN1 State
+      description: Reflects the state of AUXIN1 input, which is optional and application specific.
+      bitLength: 1
+    -
+      name: Charge Disable State
+      description: Signals any charge source to stop charging the battery while this bit is set. This state is determined by BMS logic based on multiple factors including cell level and pack level protective functions.
+      bitLength: 1
+    -
+      name: Over-current State
+      description: BMS detected current higher than preset limit.
+      bitLength: 1
+    -
+      name: Unused
+      bitLength: 2
 -
   pgn: 65259
   id: rvcProductId
@@ -243,8 +404,30 @@
       description: Operating Status 2
       bitLength: 2
     -
+      id: unused
+      name: Unused
+      bitLength: 4
+    -
       id: source
       name: Source
       description: Source Address
       default: 0x45
       bitLength: 8
+    -
+      id: spnData1
+      name: SPN data 1
+    -
+      id: spnData2
+      name: SPN data 2
+    -
+      id: spnData3
+      name: SPN data 3
+    -
+      id: occurrenceCount
+      name: Occurrence Count
+    -
+      id: dsaExtension
+      name: DSA Extension
+    -
+      id: bankSelect
+      name: Bank Select
