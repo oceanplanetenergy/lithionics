@@ -1,14 +1,19 @@
 const _ = require('lodash/fp')
-const { divideBy, replaceField, setWith } = require('cape-lodash')
+const { divideBy, ensureField, replaceField, setWith } = require('cape-lodash')
 const yaml = require('js-yaml')
 const fs   = require('fs').promises
 
 const map = _.map.convert({ cap: false })
 // Get document, or throw exception on error
 const docPath = 'pgn.yaml'
+const docOpts = { encoding: 'utf8' }
+const sortByPgn = _.sortBy('pgn')
 
-const getFile = () => fs.readFile(docPath, { encoding: 'utf8' })
+const getFile = () => fs.readFile(docPath, docOpts)
   .then(yaml.safeLoad)
+
+const saveFile = pgns =>
+  fs.writeFile(docPath, yaml.safeDump(sortByPgn(pgns), docOpts))
 
 const pgnDefault = {
   complete: false,
@@ -36,7 +41,15 @@ const fixPgn = _.flow(
   setWith('bits', 'fields', countBits),
   setWith('bytes', 'bits', divideBy(8)),
 )
-const fixPgns = _.map(fixPgn)
+const fixPgns = _.flow(
+  _.map(fixPgn),
+  sortByPgn,
+)
+
 getFile()
-  .then(fixPgns)
-  .then(res => console.log(res))
+  .then(saveFile)
+  // .then(sortByPgn)
+  // .then(yaml.dump)
+  // .then(console.log)
+//   .then(fixPgns)
+//   .then(res => console.log(res))
